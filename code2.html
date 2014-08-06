@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="container" style="width:500px">
+<div id="header" style="background-color:#FFA500">
+<h1 style="margin-bottom:0;">Main Title of Web Page</h1></div>
+
+<div id="menu" style="background-color:#FFD700;height:200px;width:150px;float:left;">
+<b>Menu</b>
+<ul>
+<li>HTML</li>
+<li>CSS</li>
+<li>JavaScript</li>
+<form>
+<input type="button" value="Submit">
+<select name="level">
+<option value="1">*</option>
+<option value="2">**</option>
+<option value="3">***</option>
+<option value="4">****</option>
+<option value="5" selected>*****</option>
+</select>
+</form>
+</div>
+
+<div id="content" style="background-color:#EEEEEE;height:200px;width:350px;float:left;">
+<fieldset>
+<legend><p style=color:red>Please login here!!</p></legend>
+<form>
+username: <input type="text" name="user" value="Your name"><br>
+password: <input type="password" name="pwd"><br>
+<input type="radio" name="sex" value="male">Male
+<input type="radio" name="sex" value="female"> Female<br>
+</fieldset>
+</form>
+<br>
+<textarea rows="4" cols="40">Comment here...</textarea>
+</div>
+
+<div id="footer" style="background-color:#FFA500;clear:both;text-align:center;">
+Copyright © W3Schools.com</div>
+<iframe src="/Users/pimpat/Downloads/62_1920_1080.png" name="iframe" width=500" height="300"></iframe>
+<p><a href="http://www.w3schools.com" target="iframe">w3schools</a></p>
+
+<p id="demo"></p>
+<p id="demo"></p>
+
+<script>
+document.getElementById("demo").innerHTML = "See my picture!";
+document.getElementById("demo").style.fontSize = "25px";
+
+function changePic(sw){
+	var pic;
+	if(sw==0)pic="/Users/pimpat/Downloads/10387151_266991610153112_4159308907355267187_o.jpg";
+	else pic="/Users/pimpat/Downloads/10495019_266998666819073_2965432000020482039_o.jpg";
+	document.getElementById('myImage').src=pic;
+}
+</script>
+<img id="myImage" src="/Users/pimpat/Downloads/10387151_266991610153112_4159308907355267187_o.jpg" width="270" height="180">
+<p>
+<button type="button" onclick="changePic(0)">Pim&Pon</button>
+<button type="button" onclick="changePic(1)">Pim</button>
+</p>
+<p style="color:red">&#9829;&#9829;&#9829;&#9829;&#9829;&#9829;&#9829;&#9829;&#9829;&#9829;&#9829;&#9829;&#9829;</p>
+<p style="z-index:-1;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, </p>
+<noscript>Sorry, your browser does not support JavaScript!</noscript>
+<p> I have 30,000 &yen;.</p>
+<p> &lt; &gt; &reg;</p>
+</body>
+</html>

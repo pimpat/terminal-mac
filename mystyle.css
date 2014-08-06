@@ -1,0 +1,11 @@
+h3 {color: red;}
+p {margin-left: 20px;}
+body {background-image:"/Users/pimpat/Downloads/62_1920_1080.png" }
+#hi{
+        color:white;
+        background-color:orange;
+        font-size:18px;
+}
+h3,p.cls{
+        color:pink;
+}

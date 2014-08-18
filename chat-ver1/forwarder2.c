@@ -48,7 +48,7 @@ static void *receive_req (void *receiver) {
         while(1) {
                 char *string = s_recv(y->res);
                 if (string == NULL)
-                        printf("string == NULL\n");
+                        printf("1 string == NULL\n");
                 if(strstr(string,"4")!=NULL){
 			printf("\n<receive_req>\n");
                         char *token=strtok(string," ");
@@ -72,13 +72,12 @@ static void *receive_req (void *receiver) {
                         printf("friend id: %s\n",token);
                         y->num++;
                         s_send(y->res,"successful!!");
-                        free (string);
                         printf("----------------------------\n");
 
 			strcat(str,token);
 			printf("str: %s\n",str);
                         s_send(y->noti,str);
-                	free (string);
+                        free (string);
 		}
         }
         zmq_close(y->res);
@@ -195,6 +194,7 @@ int main(int argc, char *argv[]){
 	void *noti = zmq_socket(context, ZMQ_PUB);
     	zmq_bind (noti, "tcp://*:5506");
 
+	char *string;
 	printf("[----Forwarder----]\n");
 	printf("Forwarder is working ...\n");
 	char st[70];
@@ -203,17 +203,17 @@ int main(int argc, char *argv[]){
 
 	char name[20];
 	char id[10];
-	char* string = s_recv(fwder);
+	string = s_recv(fwder);
 	sprintf(name,"%s",string);
-	free(string);
-	s_send(fwder,"received name");
 	printf("name: %s\n",name);
+	s_send(fwder,"received name");
+	free(string);
 
 	string = s_recv(fwder);
 	sprintf(id,"%s",string);
-	free(string);
-	s_send(fwder,"received id");
 	printf("id: %s\n",id);
+	s_send(fwder,"received id");
+	free(string);
 
    	char friend[20]; 
 	int oldchat = 0;	// 1 = want to join
@@ -250,13 +250,13 @@ int main(int argc, char *argv[]){
 	free(string);
 
 	string = s_recv(fwder);
-	printf("string: %s\n",string);
 	frd = atoi(string);
 	printf("frd: %d\n",frd);
 	s_send(fwder,"received frd");
+	free(string);
 	
 	for(i=0;i<frd;i++){
-		char* string = s_recv(fwder); 
+		string = s_recv(fwder); 
 		//printf("%s\n",string);
 		char *token=strtok(string," ");
 		strcpy(friendip[i], token);
@@ -337,11 +337,10 @@ int main(int argc, char *argv[]){
                                 //sprintf(st,"3 %s %s",friendip[0],argv[1]);
                                 sprintf(st,"3 %s %s %s %s",friendip[i],friend,argv[1],id);
                                 s_send(requester, st);
-                                char *buffer = s_recv(requester);
-                                if (buffer==NULL) printf("NULLL");
-                                //char *buffer = NULL;
-                                printf("%s\n",buffer);
-                                free(buffer);
+                                string = s_recv(requester);
+                                if (string == NULL) printf("NULL\n");
+                                printf("%s\n",string);
+                                free(string);
                         }
                         oldchat=0;
                 }
@@ -359,7 +358,7 @@ int main(int argc, char *argv[]){
 			oldchat=0;
 		}
 */
-		char *string = s_recv(fwder);
+		string = s_recv(fwder);
 		printf("Fwd msg: %s",string);
 		s_send(fwder,"received");	// send ack. to client
 		s_send(sender,string);		// forward msg to this group

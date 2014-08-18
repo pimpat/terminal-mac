@@ -52,6 +52,7 @@ static void *receive_ip (void *receiver){
 			printf("friend id: %s\n",token);
                         x->num++;
                 }
+		free(string);
         }
 	zmq_close(x->recv_noti);
 	return NULL;
@@ -72,6 +73,7 @@ int main(int argc, char *argv[]){
     	void *sender = zmq_socket (context, ZMQ_REQ);
     	zmq_connect(sender, fwd_ip);
 
+	char *string;
 	printf("[----Chat Room----]\n");
         printf("Enter your name: ");
         char name[20];
@@ -88,38 +90,38 @@ int main(int argc, char *argv[]){
                 st[0]='\0';
 		sprintf(st,"0 ONLINE %s %s %s", id, name, argv[1]);
                 s_send(requester, st);
-                char *buffer = s_recv(requester);
-                free(buffer);
+                string = s_recv(requester);
+                free(string);
         }
         else{
                 st[0]='\0';
 		sprintf(st,"0 OFFLINE %s %s %s", id, name, argv[1]);
                 s_send(requester, st);
-                char *buffer = s_recv(requester);
-                free(buffer);
+                string = s_recv(requester);
+                free(string);
                 printf("Exit now ...\n");
                 sleep(3);
                 exit(0);
         }
 	
 	s_send(sender,name);
-        char *buffer = s_recv(sender);
-        printf("%s\n",buffer);
-        free(buffer);
+        string= s_recv(sender);
+        printf("%s\n",string);
+        free(string);
 
         s_send(sender,id);
-        buffer = s_recv(sender);
-        printf("%s\n",buffer);
-        free(buffer);
+        string = s_recv(sender);
+        printf("%s\n",string);
+        free(string);
 
 	st[0]='\0';
         printf("Get list of friends(Y/N): ");
         scanf("%s",st);
         if(strcmp(st,"Y")==0){
                 s_send(requester, "2");
-                buffer = s_recv(requester);
-                printf("%s",buffer);
-                free(buffer);
+                string = s_recv(requester);
+                printf("%s",string);
+                free(string);
         }
 
 	st[0]='\0';
@@ -130,24 +132,24 @@ int main(int argc, char *argv[]){
         if(strcmp(st, "Y")==0){
 		numfrd = 1;
 		s_send(sender,"Y");
-  		buffer = s_recv(sender);
-        	printf("%s\n",buffer);
-        	free(buffer);
+  		string = s_recv(sender);
+        	printf("%s\n",string);
+        	free(string);
 		
         }
 	else{
 		s_send(sender,"N");
-  		buffer = s_recv(sender);
-        	printf("%s\n",buffer);
+  		string = s_recv(sender);
+        	printf("%s\n",string);
         	printf("Enter number of friends: ");
         	scanf("%i",&numfrd);
 		char cnum[2];
 		sprintf(cnum,"%d",numfrd);
-		free(buffer);
+		free(string);
 		s_send(sender,cnum);
-  		buffer = s_recv(sender);
-        	printf("%s\n",buffer);
-        	free(buffer);
+  		string = s_recv(sender);
+        	printf("%s\n",string);
+        	free(string);
 	}
 	
 	char friendip[30][30];
@@ -159,14 +161,14 @@ int main(int argc, char *argv[]){
                 scanf("%s",friend);
 		if(i==0){
                 	s_send(sender, friend);
-                	char *string= s_recv(sender);
+                	string= s_recv(sender);
 			printf("%s\n",string);
 			free(string);
 		}
                 st[0]='\0';
 		sprintf(st,"1 %s",friend);
                 s_send(requester, st);
-                char *string= s_recv(requester);
+                string= s_recv(requester);
 
                 if(strcmp(string,"-1")==0) {
                         printf("%s is OFFLINE.\n",friend);
@@ -193,7 +195,7 @@ int main(int argc, char *argv[]){
         st[0]='\0';
         sprintf(st,"1 %s",name);
         s_send(requester,st);
-        char *string= s_recv(requester);
+        string= s_recv(requester);
         if(strcmp(string,"-1")!=0) {
                 char *token=strtok(string,"\n");
                 int number;
@@ -221,17 +223,17 @@ int main(int argc, char *argv[]){
 	printf("frd: %d\n",frd);
 	sprintf(tempfrd,"%d",frd);
 	s_send(sender,tempfrd);
-	buffer = s_recv(sender);
-	printf("%s\n",buffer);
-	free(buffer);
+	string = s_recv(sender);
+	printf("%s\n",string);
+	free(string);
 	
 	for(i=0;i<frd;i++){
 		st[0]='\0';
 		sprintf(st,"%s %s",friendip[i],friendid[i]);
 		s_send(sender,st);
-		char *buffer = s_recv(sender);
-		printf("%s\n",buffer);
-		free(buffer);
+		string = s_recv(sender);
+		printf("%s\n",string);
+		free(string);
 	}
 
 	// receive msg
@@ -286,9 +288,9 @@ int main(int argc, char *argv[]){
 			st[0]='\0';
 			sprintf(st,"0 OFFLINE %s %s %s", id, name, argv[1]);
             		s_send(requester, st);
-            		char *buffer = s_recv(requester);
-            		printf("%s\n",buffer);
-            		free(buffer);
+            		char *string = s_recv(requester);
+            		printf("%s\n",string);
+            		free(string);
             		printf("Exit now ...\n");
             		sleep(3);
             		exit(0);
@@ -297,15 +299,17 @@ int main(int argc, char *argv[]){
             		st[0]='\0';
             		s_send(requester, "2");
             		printf("\t[----List of friends----]\n");
-            		char *buffer = s_recv(requester);
-            		printf("%s",buffer);
-            		free(buffer);
+            		char *string = s_recv(requester);
+            		printf("%s",string);
+            		free(string);
         	}
 		if(strcmp(temp,"LIST")!=0){ 
-			s_send (sender, string);
-			char *buffer = s_recv(sender);
-                        //printf("%s\n",buffer);
-                        free(buffer);
+			char tempstring[256];
+			sprintf(tempstring,"%s: %s",name,string);
+			s_send (sender, tempstring);
+			char *string = s_recv(sender);
+                        //printf("%s\n",string);
+                        free(string);
 		}			
     	}
 	pthread_join(rec_data,NULL);

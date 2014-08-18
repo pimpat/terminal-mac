@@ -19,7 +19,7 @@ static void *receive_data (void *receiver) {
         while(1) {
                 char *string = s_recv(receiver);
                 if(strlen(string)==1) continue;
-                printf ("Message: %s", string);
+                printf ("%s", string);
                 free (string);
         }
         zmq_close(receiver);
@@ -36,20 +36,21 @@ static void *receive_ip (void *receiver){
                         token = strtok(NULL," ");
                         //  "tcp://192.168.179.111:5501"
                         //printf("NEW IP: %s\n",token);
+
 			x->recv[x->i] = zmq_socket (x->context, ZMQ_SUB);
                         zmq_connect (x->recv[x->i], token);
                         zmq_setsockopt (x->recv[x->i], ZMQ_SUBSCRIBE, NULL, 0);
                         pthread_create(&x->rec_d, NULL,receive_data,x->recv[x->i]);
 			x->i++;
 			printf("value of i: %d\n",x->i);
-/*
+
 			sprintf(x->friendip[x->num],"%s",token);
-			printf("friend ip: %s\n",token)
+			printf("friend ip: %s\n",token);
+
 			token = strtok(NULL," ");
                         sprintf(x->friendid[x->num],"%s",token);
-			printf("friend id: %s\n",token)
+			printf("friend id: %s\n",token);
                         x->num++;
-*/
                 }
         }
 	zmq_close(x->recv_noti);
@@ -105,8 +106,9 @@ int main(int argc, char *argv[]){
         char *buffer = s_recv(sender);
         printf("%s\n",buffer);
         free(buffer);
+
         s_send(sender,id);
-        char *buffer = s_recv(sender);
+        buffer = s_recv(sender);
         printf("%s\n",buffer);
         free(buffer);
 
@@ -115,8 +117,8 @@ int main(int argc, char *argv[]){
         scanf("%s",st);
         if(strcmp(st,"Y")==0){
                 s_send(requester, "2");
-                char *buffer = s_recv(requester);
-                printf("%s\n",buffer);
+                buffer = s_recv(requester);
+                printf("%s",buffer);
                 free(buffer);
         }
 
@@ -128,19 +130,20 @@ int main(int argc, char *argv[]){
         if(strcmp(st, "Y")==0){
 		numfrd = 1;
 		s_send(sender,"Y");
-  		char *buffer = s_recv(sender);
+  		buffer = s_recv(sender);
         	printf("%s\n",buffer);
         	free(buffer);
 		
         }
 	else{
 		s_send(sender,"N");
-  		char *buffer = s_recv(sender);
+  		buffer = s_recv(sender);
         	printf("%s\n",buffer);
         	printf("Enter number of friends: ");
         	scanf("%i",&numfrd);
 		char cnum[2];
 		sprintf(cnum,"%d",numfrd);
+		free(buffer);
 		s_send(sender,cnum);
   		buffer = s_recv(sender);
         	printf("%s\n",buffer);
@@ -154,10 +157,17 @@ int main(int argc, char *argv[]){
         for(i=0;i<numfrd;i++){
                 printf("Enter a friend's name: ");
                 scanf("%s",friend);
+		if(i==0){
+                	s_send(sender, friend);
+                	char *string= s_recv(sender);
+			printf("%s\n",string);
+			free(string);
+		}
                 st[0]='\0';
 		sprintf(st,"1 %s",friend);
                 s_send(requester, st);
                 char *string= s_recv(requester);
+
                 if(strcmp(string,"-1")==0) {
                         printf("%s is OFFLINE.\n",friend);
                         exit(0);
@@ -166,7 +176,8 @@ int main(int argc, char *argv[]){
                         char *token=strtok(string,"\n");
                         int number;
                         number = atoi(token);
-                        for(i=0;i<number;i++){
+			int j;
+                        for(j=0;j<number;j++){
                                 token = strtok(NULL," ");
                                 strcpy(friendip[frd], token);
                                 printf ("Friend's IP: %s\t\t",friendip[frd]);
@@ -174,12 +185,6 @@ int main(int argc, char *argv[]){
                                 strcpy(friendid[frd], token);
                                 printf ("Friend's ID: %s\n",friendid[frd]);
                                 frd++;
-/*				
-				sprintf(st,"%s %s",friendip[frd],friendid[frd]);
-				s_send(sender,st);
-                        	char *buffer = s_recv(sender);
-                        	free(buffer);
-*/
                         }
 		}
 		free(string);
@@ -213,9 +218,10 @@ int main(int argc, char *argv[]){
         }
 	
 	char tempfrd[2];
-	sprintf(tempfrd,"%s",frd);
+	printf("frd: %d\n",frd);
+	sprintf(tempfrd,"%d",frd);
 	s_send(sender,tempfrd);
-	char *buffer = s_recv(sender);
+	buffer = s_recv(sender);
 	printf("%s\n",buffer);
 	free(buffer);
 	
@@ -234,7 +240,7 @@ int main(int argc, char *argv[]){
 
         for(i=0;i<frd;i++){
                 receiver[i] = zmq_socket (context, ZMQ_SUB);
-                rc = zmq_connect (receiver[i], (char *)friendip[i]);
+                zmq_connect (receiver[i], (char *)friendip[i]);
                 zmq_setsockopt (receiver[i], ZMQ_SUBSCRIBE, NULL, 0);
                 pthread_create(&rec_data, NULL,receive_data,receiver[i]);
         }
@@ -245,6 +251,7 @@ int main(int argc, char *argv[]){
 	zmq_connect(recv_noti,temp);
         zmq_setsockopt (recv_noti, ZMQ_SUBSCRIBE, NULL, 0);
 
+//------------------------------------------------------------
 	new_ip newip;
 	newip.recv_noti=recv_noti;
 	newip.recv=&receiver[frd];
@@ -258,25 +265,26 @@ int main(int argc, char *argv[]){
         }
 	pthread_t rec_ip;
         pthread_create(&rec_ip, NULL,receive_ip,&newip);
+//------------------------------------------------------------
 
 	printf("Loading ...\n");
 	sleep(5);
 
-	while(rc==0){
+	while(1){
 
         	char string[256];
         	printf("%s: ",name);
         	fgets(string,sizeof string, stdin);
-
+                if(strlen(string)==1) {
+                        printf("\r                    \n");
+                        continue;
+                }
 		char temp[256];
 		sprintf(temp,"%s",string);
 		temp[strlen(string)-1] = '\0';      // fix useless \n
 		if(strcmp(temp,"EXIT")==0){
 			st[0]='\0';
-            		sprintf(st,"0 OFFLINE ");   //3
-            		strcat(st, name);
-            		strcat(st, " ");
-     		       	strcat(st, argv[1]);
+			sprintf(st,"0 OFFLINE %s %s %s", id, name, argv[1]);
             		s_send(requester, st);
             		char *buffer = s_recv(requester);
             		printf("%s\n",buffer);
@@ -289,18 +297,19 @@ int main(int argc, char *argv[]){
             		st[0]='\0';
             		s_send(requester, "2");
             		printf("\t[----List of friends----]\n");
-            		char *buffer = s_recv(requester);     //###########
+            		char *buffer = s_recv(requester);
             		printf("%s",buffer);
             		free(buffer);
         	}
 		if(strcmp(temp,"LIST")!=0){ 
-
 			s_send (sender, string);
 			char *buffer = s_recv(sender);
                         //printf("%s\n",buffer);
                         free(buffer);
 		}			
     	}
+	pthread_join(rec_data,NULL);
+	pthread_join(rec_ip,NULL);
     	zmq_close (sender);
     	zmq_close (requester);
     	zmq_ctx_destroy (context);

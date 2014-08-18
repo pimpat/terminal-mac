@@ -270,7 +270,8 @@ int main(int argc, char *argv[]){
 			char *token=strtok(string,"\n");
 			int number;
 			number = atoi(token);
-			for(i=0;i<number;i++){
+			int j;
+			for(j=0;j<number;j++){
 				token = strtok(NULL," ");	
 				strcpy(friendip[frd], token);
 				printf ("Friend's IP: %s\t\t",friendip[frd]);

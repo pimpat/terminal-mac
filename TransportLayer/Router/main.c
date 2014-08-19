@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include "router.h"
 
 int main(int argc, const char * argv[])
 {
-
-    // insert code here...
-    printf("Hello, World!\n");
+    startRouter();
+    while (1);
+    stopRouter();
+    
     return 0;
 }

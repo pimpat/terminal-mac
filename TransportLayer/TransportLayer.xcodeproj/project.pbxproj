@@ -11,6 +11,9 @@
 		3474A8A119A3586F007C837E /* Router.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3474A8A019A3586F007C837E /* Router.1 */; };
 		3474A8AC19A3587E007C837E /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3474A8AB19A3587E007C837E /* main.c */; };
 		3474A8AE19A3587E007C837E /* Client.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3474A8AD19A3587E007C837E /* Client.1 */; };
+		3474A8B619A361D2007C837E /* router.c in Sources */ = {isa = PBXBuildFile; fileRef = 3474A8B519A361D2007C837E /* router.c */; settings = {COMPILER_FLAGS = "-I."; }; };
+		3474A8BE19A3636E007C837E /* libzmq.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3474A8BD19A3636E007C837E /* libzmq.3.dylib */; };
+		3474A8C019A363E4007C837E /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3474A8BF19A363E4007C837E /* libsqlite3.0.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +46,12 @@
 		3474A8A919A3587E007C837E /* Client */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Client; sourceTree = BUILT_PRODUCTS_DIR; };
 		3474A8AB19A3587E007C837E /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3474A8AD19A3587E007C837E /* Client.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Client.1; sourceTree = "<group>"; };
+		3474A8B419A36176007C837E /* zmq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zmq.h; sourceTree = "<group>"; };
+		3474A8B519A361D2007C837E /* router.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = router.c; sourceTree = "<group>"; };
+		3474A8B719A361DB007C837E /* router.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = router.h; sourceTree = "<group>"; };
+		3474A8BA19A36276007C837E /* sqlite3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		3474A8BD19A3636E007C837E /* libzmq.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libzmq.3.dylib; sourceTree = "<group>"; };
+		3474A8BF19A363E4007C837E /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsqlite3.0.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +59,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3474A8C019A363E4007C837E /* libsqlite3.0.dylib in Frameworks */,
+				3474A8BE19A3636E007C837E /* libzmq.3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +77,10 @@
 		3474A89019A3584D007C837E = {
 			isa = PBXGroup;
 			children = (
+				3474A8BA19A36276007C837E /* sqlite3.h */,
+				3474A8B419A36176007C837E /* zmq.h */,
+				3474A8BF19A363E4007C837E /* libsqlite3.0.dylib */,
+				3474A8BD19A3636E007C837E /* libzmq.3.dylib */,
 				3474A89D19A3586F007C837E /* Router */,
 				3474A8AA19A3587E007C837E /* Client */,
 				3474A89C19A3586F007C837E /* Products */,
@@ -86,6 +101,8 @@
 			children = (
 				3474A89E19A3586F007C837E /* main.c */,
 				3474A8A019A3586F007C837E /* Router.1 */,
+				3474A8B519A361D2007C837E /* router.c */,
+				3474A8B719A361DB007C837E /* router.h */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -167,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3474A8B619A361D2007C837E /* router.c in Sources */,
 				3474A89F19A3586F007C837E /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -226,6 +244,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+					"$(PROJECT_DIR)",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -260,6 +283,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+					"$(PROJECT_DIR)",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -357,6 +385,7 @@
 				3474A8A419A3586F007C837E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3474A8AF19A3587E007C837E /* Build configuration list for PBXNativeTarget "Client" */ = {
 			isa = XCConfigurationList;
@@ -365,6 +394,7 @@
 				3474A8B119A3587E007C837E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

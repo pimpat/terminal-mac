@@ -14,6 +14,10 @@
 		3474A8BE19A3636E007C837E /* libzmq.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3474A8BD19A3636E007C837E /* libzmq.3.dylib */; };
 		3474A8C019A363E4007C837E /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3474A8BF19A363E4007C837E /* libsqlite3.0.dylib */; };
 		3474A8C219A365D5007C837E /* router.c in Sources */ = {isa = PBXBuildFile; fileRef = 3474A8C119A365D5007C837E /* router.c */; settings = {COMPILER_FLAGS = "-I. -L."; }; };
+		34A4B77319A496FD000E2650 /* client.c in Sources */ = {isa = PBXBuildFile; fileRef = 34A4B77219A496FD000E2650 /* client.c */; settings = {COMPILER_FLAGS = "-I. -L."; }; };
+		34A4B77519A49B21000E2650 /* libzmq.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3474A8BD19A3636E007C837E /* libzmq.3.dylib */; };
+		34A4B77819A4A715000E2650 /* recvthread.c in Sources */ = {isa = PBXBuildFile; fileRef = 34A4B77719A4A715000E2650 /* recvthread.c */; settings = {COMPILER_FLAGS = "-I. -L."; }; };
+		9F8DB76019AB0C2B0099618D /* funcdb.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F8DB75F19AB0C2B0099618D /* funcdb.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,6 +56,13 @@
 		3474A8BF19A363E4007C837E /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsqlite3.0.dylib; sourceTree = "<group>"; };
 		3474A8C119A365D5007C837E /* router.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = router.c; sourceTree = "<group>"; };
 		3474A8C319A3661A007C837E /* router.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = router.h; sourceTree = "<group>"; };
+		34A4B77119A496F5000E2650 /* client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
+		34A4B77219A496FD000E2650 /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
+		34A4B77619A4A61E000E2650 /* recvthread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = recvthread.h; sourceTree = "<group>"; };
+		34A4B77719A4A715000E2650 /* recvthread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = recvthread.c; sourceTree = "<group>"; };
+		34A4B77919A4AF0D000E2650 /* transport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = transport.h; sourceTree = "<group>"; };
+		9F8DB75F19AB0C2B0099618D /* funcdb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = funcdb.c; sourceTree = "<group>"; };
+		9F8DB76119AB0C3D0099618D /* funcdb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = funcdb.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34A4B77519A49B21000E2650 /* libzmq.3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +89,7 @@
 		3474A89019A3584D007C837E = {
 			isa = PBXGroup;
 			children = (
+				34A4B77919A4AF0D000E2650 /* transport.h */,
 				3474A8BA19A36276007C837E /* sqlite3.h */,
 				3474A8B419A36176007C837E /* zmq.h */,
 				3474A8BF19A363E4007C837E /* libsqlite3.0.dylib */,
@@ -102,6 +115,8 @@
 				3474A89E19A3586F007C837E /* main.c */,
 				3474A8A019A3586F007C837E /* Router.1 */,
 				3474A8C119A365D5007C837E /* router.c */,
+				9F8DB75F19AB0C2B0099618D /* funcdb.c */,
+				9F8DB76119AB0C3D0099618D /* funcdb.h */,
 				3474A8C319A3661A007C837E /* router.h */,
 			);
 			path = Router;
@@ -112,6 +127,10 @@
 			children = (
 				3474A8AB19A3587E007C837E /* main.c */,
 				3474A8AD19A3587E007C837E /* Client.1 */,
+				34A4B77119A496F5000E2650 /* client.h */,
+				34A4B77219A496FD000E2650 /* client.c */,
+				34A4B77619A4A61E000E2650 /* recvthread.h */,
+				34A4B77719A4A715000E2650 /* recvthread.c */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -185,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3474A8C219A365D5007C837E /* router.c in Sources */,
+				9F8DB76019AB0C2B0099618D /* funcdb.c in Sources */,
 				3474A89F19A3586F007C837E /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,7 +213,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34A4B77319A496FD000E2650 /* client.c in Sources */,
 				3474A8AC19A3587E007C837E /* main.c in Sources */,
+				34A4B77819A4A715000E2650 /* recvthread.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +348,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -360,6 +386,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

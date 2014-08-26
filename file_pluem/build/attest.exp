@@ -1,0 +1,250 @@
+#!/usr/bin/expect
+
+set timeout 2;
+
+set router_path "./router.o";
+set spawn_router "";
+set router_port "7671";
+
+set client_path "./client.o";
+set spawn_c(1) "";
+set spawn_c(2) "";
+set spawn_c(3) "";
+set spawn_c(fwd) "";
+set client_port(1) "7672";
+set client_port(2) "7673";
+set client_port(3) "7674";
+set client_port(fwd) "7675";
+
+proc startClient {i client_port id username isNAT} {
+	global spawn_router;
+	global client_path;
+	global spawn_c;
+
+### start process ./client.o <port>
+	spawn $client_path $client_port
+	set spawn_c($i) $spawn_id;
+	expect {
+		-i $spawn_c($i)  "ID:" {}
+		default { puts "Error: Start client\n"; exit; }
+	}
+### insert id device
+	send -i $spawn_c($i) "$id\r";
+	expect {
+		-i $spawn_c($i) "Username:" {}
+		default { puts "Error: get id/username"; exit; }
+	}
+### insert username
+	send -i $spawn_c($i) "$username\r";
+	expect {
+		-i $spawn_router "Status On:" {}
+		timeout { puts "Error: router didn't receive packet"; exit; }
+	}
+	if { $isNAT } {
+		expect {
+			-i $spawn_c($i) "In Firewall/NAT" {}
+			timeout { puts "Error: client$i didn't receive ack"; exit; }
+		}
+	}
+	expect {
+		-i $spawn_c($i) "Command:" {}
+		timeout { puts "Error: client$i didn't receive ack"; exit; }
+	}
+}
+proc stopConnection {i} {
+	global spawn_c;
+	send -i $spawn_c($i) "q!\r"
+	expect {
+		-i $spawn_c($i) "Command:" {}
+		default { puts "Error: client$i can't stop connection"; exit; }
+	}
+}
+proc joinGroup {i group} {
+	global spawn_router;
+	global spawn_c;
+	send -i $spawn_c($i) "join $group\r"
+	expect {
+		-i $spawn_router "Join group" {}
+		timeout { puts "Error: router didn't receive packet"; exit; }
+	}
+	expect {
+		-i $spawn_c($i) "Join to $group success.\r\nCommand:" {}
+		timeout { puts "Error: client$i didn't receive ack"; exit; }
+	}
+}
+proc sendGroup {i group member msg} {
+	global spawn_c
+	send -i $spawn_c($i) "group $group\r"
+	expect {
+		-i $spawn_c($i) "0$i:" {}
+		default { puts "Error: client$i can't send to $group"; exit; }
+	}
+	send -i $spawn_c($i) "$msg\r"
+	expect {
+		-i $spawn_c($member) "0$i: $msg\r\n" {}
+		timeout { puts "Error: client$member didn't receive msg"; exit; }
+	}
+	expect {
+		-i $spawn_c($i) "0$i:" {}
+		timeout { puts "Error: client$i didn't receive ack"; exit; }
+	}
+	stopConnection $i
+}
+proc leaveGroup {i group} {
+	global spawn_router;
+	global spawn_c;
+	send -i $spawn_c($i) "leave $group\r"
+	expect {
+		-i $spawn_router "Leave group" {}
+		timeout { puts "Error: router didn't receive packet"; exit; }
+	}
+	expect {
+		-i $spawn_c($i) "Leave $group success.\r\nCommand:" {}
+		timeout { puts "Error: client$i didn't receive ack"; exit; }
+	}
+}
+proc stopClient {i} {
+	global spawn_router;
+	global spawn_c;
+	send -i $spawn_c($i) "q!\r";
+	expect {
+		-i $spawn_router "Status Off:" {}
+		timeout { puts "Error: router didn't receive packet"; exit; }
+	}
+	expect {
+		-i $spawn_c($i) "END" {}
+		timeout { puts "Error: stop client (can't close context"; exit; }
+	}
+}
+
+### start process ./router.o
+spawn $router_path;
+set spawn_router $spawn_id;
+expect {
+	-i $spawn_router "Bind socket:" {}
+	default { puts "Error: Start router"; exit; }
+}
+
+startClient 1 $client_port(1) 01 u1 false;
+startClient 2 $client_port(2) 02 u2 false;
+startClient fwd $client_port(fwd) FWD FWD false;;
+startClient 3 $client_port(3) 03 u1 true;
+
+############# Send by Device ############# 
+### initail client1 -> client2
+send -i $spawn_c(1) "device 02\r"
+expect {
+	-i $spawn_router "Request id: 02" {}
+	timeout { puts "Error: router didn't receive packet"; exit; }
+}
+expect {
+	-i $spawn_router "Reply *:$client_port(2)\r\n" {}
+	default { puts "Error: router didn't send packet to client1"; exit; }
+}
+expect {
+	-i $spawn_c(1) "01:" {}
+	timeout { puts "Error: client1 didn't receive ack"; exit; }
+}
+### client1 send "c1toc2" -> client2
+send -i $spawn_c(1) "c1toc2\r"
+expect {
+	-i $spawn_c(2) "01: c1toc2\r\n" {}
+	timeout { puts "Error: client2 didn't receive msg"; exit; }
+}
+expect {
+	-i $spawn_c(1) "01:" {}
+	timeout { puts "Error: client1 didn't receive ack"; exit; }
+}
+stopConnection 1
+
+############# Send by User ############# 
+### initial client1 -> u2
+send -i $spawn_c(1) "send u2\r"
+expect {
+	-i $spawn_router "Request username: u2\r\n" {}
+	timeout { puts "Error: router didn't receive packet"; exit; }
+}
+expect {
+	-i $spawn_router "Reply id:*, *:$client_port(2)\r\n" {}
+	default { puts "Error: router didn't send packet to client1"; exit; }
+}
+expect {
+	-i $spawn_c(1) "u1:" {}
+	timeout { puts "Error: client1 didn't receive ack"; exit; }
+}
+### client1 send "c1tou2" -> u2
+send -i $spawn_c(1) "c1tou2\r"
+expect {
+	-i $spawn_c(2) "u1: c1tou2\r\n" {}
+	timeout { puts "Error: client2 didn't receive msg"; exit; }
+}
+expect {
+	-i $spawn_c(1) "u1:" {}
+	timeout { puts "Error: client1 didn't receive ack"; exit; }
+}
+stopConnection 1
+
+############# Ack by User ############# 
+### initial client2 -> u1
+send -i $spawn_c(2) "send u1\r"
+expect {
+	-i $spawn_router "Request username: u1\r\n" {}
+	timeout { puts "Error: router didn't receive packet"; exit; }
+}
+expect {
+	-i $spawn_router "Reply id:*, *:$client_port(1)\r\n  Reply id:*, *:7700\r\n" {}
+	default { puts "Error: router didn't send packet to client2"; exit; }
+}
+expect {
+	-i $spawn_c(2) "u2:" {}
+	timeout { puts "Error: client2 didn't receive ack"; exit; }
+}
+### client2 send "c2tou1" -> u1
+send -i $spawn_c(2) "c2tou1\r"
+expect {
+	-i $spawn_c(1) "u2: c2tou1\r\n" {}
+	timeout { puts "Error: client1 didn't receive msg"; exit; }
+}
+expect {
+	-i $spawn_c(3) "u2: c2tou1\r\n" {}
+	timeout { puts "Error: client3 didn't receive msg"; exit; }
+}
+expect {
+	-i $spawn_c(2) "u2:" {}
+	timeout { puts "Error: client2 didn't receive ack"; exit; }
+}
+stopConnection 2
+
+############# Join Group ############# 
+joinGroup 1 j1
+joinGroup 1 j2
+joinGroup 2 j1
+joinGroup 3 j2
+
+############# Send Group ############# 
+### client1 to j1
+sendGroup 1 j1 2 c1toj1
+### client1 to j2
+sendGroup 1 j2 3 c1toj2
+### client2 to j1
+sendGroup 2 j1 1 c2toj1
+### client3 to j2
+sendGroup 3 j2 1 c3toj2
+
+############# Leave Group ############# 
+leaveGroup 1 j1
+leaveGroup 1 j2
+leaveGroup 2 j1
+leaveGroup 3 j2
+
+
+############# Stop Client ############# 
+stopClient 1;
+stopClient 2;
+stopClient 3;
+stopClient fwd;
+
+send -i $spawn_router ""
+puts "Done";
+
+exit;

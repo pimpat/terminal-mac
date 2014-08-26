@@ -1,0 +1,150 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		34B95BCF196CF647008E9DFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 34B95BCB196CF647008E9DFA /* Client.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 34794FEF196A625C00583555;
+			remoteInfo = Client;
+		};
+		34B95BDB196CF676008E9DFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 34B95BD7196CF676008E9DFA /* Router.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 34ECD97A1966B7E500CF820B;
+			remoteInfo = Router;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		344F2A9B198F892600094CB1 /* Device.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Device.c; sourceTree = "<group>"; };
+		344F2A9E198F892F00094CB1 /* Device.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Device.h; sourceTree = "<group>"; };
+		344F2AA3198F954A00094CB1 /* define.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = define.h; sourceTree = "<group>"; };
+		344F2AA6198F9EE600094CB1 /* User.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = User.c; sourceTree = "<group>"; };
+		344F2AA7198F9EF000094CB1 /* User.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		34B95BCB196CF647008E9DFA /* Client.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Client.xcodeproj; path = Client/Client.xcodeproj; sourceTree = "<group>"; };
+		34B95BD7196CF676008E9DFA /* Router.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Router.xcodeproj; path = Router/Router.xcodeproj; sourceTree = "<group>"; };
+		34B95BDF196CF6D4008E9DFA /* mystruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mystruct.h; sourceTree = "<group>"; };
+		34BBE27D1994CC5F0037351B /* Group.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Group.c; sourceTree = "<group>"; };
+		34BBE27E1994CC5F0037351B /* Group.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		34794FD9196A621600583555 = {
+			isa = PBXGroup;
+			children = (
+				344F2A9E198F892F00094CB1 /* Device.h */,
+				344F2A9B198F892600094CB1 /* Device.c */,
+				344F2AA7198F9EF000094CB1 /* User.h */,
+				344F2AA6198F9EE600094CB1 /* User.c */,
+				34BBE27E1994CC5F0037351B /* Group.h */,
+				34BBE27D1994CC5F0037351B /* Group.c */,
+				344F2AA3198F954A00094CB1 /* define.h */,
+				34B95BDF196CF6D4008E9DFA /* mystruct.h */,
+				34B95BD7196CF676008E9DFA /* Router.xcodeproj */,
+				34B95BCB196CF647008E9DFA /* Client.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		34B95BCC196CF647008E9DFA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				34B95BD0196CF647008E9DFA /* Client */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		34B95BD8196CF676008E9DFA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				34B95BDC196CF676008E9DFA /* Router */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		34794FDA196A621600583555 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+			};
+			buildConfigurationList = 34794FDD196A621600583555 /* Build configuration list for PBXProject "newTran" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 34794FD9196A621600583555;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 34B95BCC196CF647008E9DFA /* Products */;
+					ProjectRef = 34B95BCB196CF647008E9DFA /* Client.xcodeproj */;
+				},
+				{
+					ProductGroup = 34B95BD8196CF676008E9DFA /* Products */;
+					ProjectRef = 34B95BD7196CF676008E9DFA /* Router.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		34B95BD0196CF647008E9DFA /* Client */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Client;
+			remoteRef = 34B95BCF196CF647008E9DFA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34B95BDC196CF676008E9DFA /* Router */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Router;
+			remoteRef = 34B95BDB196CF676008E9DFA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin XCBuildConfiguration section */
+		34794FDE196A621600583555 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		34794FDF196A621600583555 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		34794FDD196A621600583555 /* Build configuration list for PBXProject "newTran" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				34794FDE196A621600583555 /* Debug */,
+				34794FDF196A621600583555 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 34794FDA196A621600583555 /* Project object */;
+}

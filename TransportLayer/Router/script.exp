@@ -1,0 +1,35 @@
+#!/usr/bin/expect
+
+set timeout 10
+set router "./router.o"
+set client "./client.o"
+set ip "192.168.179.94"
+set id1 "0001"
+set id2 "0002"
+set user1 "u1"
+set user2 "u2"
+set port1 "5501"
+set port2 "5502"
+
+spawn $client $ip
+set ps1_id $spawn_id
+expect "Enter data: "
+send "$id1 $user1 $ip $port1\r"
+
+expect "target:"
+send "$user1\r"
+expect "msg:"
+send "hi..1\r"
+
+expect "target:"
+send "r\r"
+
+expect "target:"
+send "$user1\r"
+expect "msg:"
+send "hi..2\r"
+
+expect "target:"
+send "r\r"
+
+expect eof

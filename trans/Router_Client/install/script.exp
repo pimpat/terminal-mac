@@ -1,0 +1,65 @@
+#!/usr/bin/expect
+
+set timeout 10
+set file "./router_client.o"
+set ip "localhost"
+set id1 "0001"
+set id2 "0002"
+set user1 "u1"
+set user2 "u2"
+set port1 "5501"
+set port2 "5502"
+
+spawn $file
+set ps0_id $spawn_id
+expect -i $ps0_id "Enter r/c: "
+send -i $ps0_id "r\r"
+
+spawn $file
+set ps1_id $spawn_id
+expect -i $ps1_id "Enter r/c: "
+send -i $ps1_id "c\r"
+
+##### msg from u1 to u1
+expect -i $ps1_id "Enter data: "
+send -i $ps1_id "$id1 $user1 $ip $port1\r"
+expect -i $ps1_id "target:"
+send -i $ps1_id "$user1\r"
+expect -i $ps1_id "msg:"
+send -i $ps1_id "hi..1\r"
+expect -i $ps1_id "target:"
+send -i $ps1_id "r\r"
+
+#expect -i $ps1_id "target:"
+#send -i $ps1_id "$user2\r"
+#expect -i $ps1_id "msg:"
+#send -i $ps1_id "hi..1\r"
+#expect -i $ps1_id "target:"
+
+spawn $file
+set ps2_id $spawn_id
+expect -i $ps2_id "Enter r/c: "
+send -i $ps2_id "c\r"
+expect -i $ps2_id "Enter data: "
+send -i $ps2_id "$id2 $user2 $ip $port2\r"
+
+##### msg from u1 to u2
+expect -i $ps1_id "target:"
+send -i $ps1_id "$user2\r"
+expect -i $ps1_id "msg:"
+send -i $ps1_id "hi..1\r"
+
+##### msg from u2 to u1
+expect -i $ps2_id "target:"
+send -i $ps2_id "r\r"
+expect -i $ps2_id "target:"
+send -i $ps2_id "$user1\r"
+expect -i $ps2_id "msg:"
+send -i $ps2_id "hi..2\r"
+
+expect -i $ps1_id "target:"
+send -i $ps1_id "r\r"
+expect -i $ps1_id "target:"
+send -i $ps1_id "$user1\r"
+
+expect eof

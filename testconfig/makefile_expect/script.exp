@@ -1,0 +1,195 @@
+#!/usr/bin/expect
+
+set timeout 10
+set file "./router_client.o"
+set ip "localhost"
+set id1 "0001"
+set id2 "0002"
+set user1 "u1"
+set user2 "u2"
+set port1 "5501"
+set port2 "5502"
+set path "../install/config.conf"
+
+send_user "================ start test ================\n"
+
+spawn $file
+set ps0_id $spawn_id
+expect {
+	-i $ps0_id "Enter r/c: " { } 
+	timeout { exit }
+}
+send -i $ps0_id "r\r"
+expect {
+        -i $ps0_id "stopRouter(y/n): " { }
+        timeout { exit }
+}
+
+spawn $file
+set ps1_id $spawn_id
+expect {
+	-i $ps1_id "Enter r/c: " { } 
+	timeout { exit }
+}
+send -i $ps1_id "c\r"
+expect {
+	-i $ps1_id "Enter config file: " { }
+	timeout { puts "Failed - config file is not found" exit }
+}
+
+##### use config file ##### 
+send -i $ps1_id $path\r
+expect {
+	-i $ps1_id "startClient(1/2): " { }
+	timeout { puts "Failed - user1 can not start client" exit }
+}
+send -i $ps1_id "2\r"
+expect {
+	-i $ps1_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user1 can not send input--id" exit }
+}
+
+##### msg from u1 to 01 #####
+send -i $ps1_id "i\r"
+expect {
+	-i $ps1_id "receiver_id: " { }
+	timeout { puts "Failed - user1 can not send user1's id" exit }
+}
+send -i $ps1_id "$id1\r"
+expect {
+	-i $ps1_id "msg: " { }
+	timeout { puts "Failed - user1 can not send message by user1's id" exit }
+}
+send -i $ps1_id "test-id1\r"
+expect {
+	-i $ps1_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user1 can not read message" exit }
+}
+send -i $ps1_id "r\r"
+expect {
+	-i $ps1_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user1 can not send input--name" exit }
+}
+
+##### msg from u1 to u1 #####
+send -i $ps1_id "n\r"
+expect {
+	-i $ps1_id "receiver_name: " { }
+	timeout { puts "Failed - user1 can not send user1's name" exit }
+}
+send -i $ps1_id "$user1\r"
+expect {
+	-i $ps1_id "msg: " { }
+	timeout { puts "Failed - user1 can not send message by user1's name" exit }
+}
+send -i $ps1_id "test-u1\r"
+expect {
+	-i $ps1_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user1 can not read message" exit }
+}
+send -i $ps1_id "r\r"
+expect {
+	-i $ps1_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user1 can not send input--id" exit }
+}
+
+spawn $file
+set ps2_id $spawn_id
+expect {
+	-i $ps2_id "Enter r/c: " { }
+	timeout { exit }
+}
+send -i $ps2_id "c\r"
+expect {
+        -i $ps2_id "Enter config file: " { }
+        timeout { puts "Failed - config file is not found" exit }
+}
+
+##### use parameter to enter data #####
+send -i $ps2_id "../install/config.conf\r"
+expect {
+        -i $ps2_id "startClient(1/2): " { }
+        timeout { puts "Failed - user2 can not start client" exit }
+}
+send -i $ps2_id "1\r"
+expect {
+	-i $ps2_id "Enter data: " { }
+	timeout { puts "Failed - user2 can not register" exit }
+}
+send -i $ps2_id "$id2 $user2 $ip $port2\r"
+expect {
+	-i $ps2_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user2 can not read message" exit }
+}
+
+##### msg from u1 to 02 #####
+send -i $ps1_id "i\r"
+expect {
+	-i $ps1_id "receiver_id: " { }
+	timeout { puts "Failed - user1 can not send user2's id" exit }
+}
+send -i $ps1_id "$id2\r"
+expect {
+	-i $ps1_id "msg: " { }
+	timeout { puts "Failed - user1 can not send message by user2's id" exit }
+}
+send -i $ps1_id "test-id2\r"
+expect {
+	-i $ps1_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user1 can not send input--name" exit }
+}
+
+send -i $ps2_id "r\r"
+expect {
+	-i $ps2_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user2 can not read message" exit }
+}
+
+##### msg from u1 to u2 #####
+send -i $ps1_id "n\r"
+expect {
+	-i $ps1_id "receiver_name: " { }
+	timeout { puts "Failed - user1 can not send user2's name" exit }
+}
+send -i $ps1_id "$user2\r"
+expect {
+	-i $ps1_id "msg: " { }
+	timeout { puts "Failed - user1 can not send message by user2's name" exit }
+}
+send -i $ps1_id "test-u2\r"
+expect {
+	-i $ps1_id "input(r/i/n/q): " { }
+	timeout { puts "Failed - user1 can not send input--quit" exit }
+}
+
+send -i $ps2_id "r\r"
+expect {
+        -i $ps2_id "input(r/i/n/q): " { }
+        timeout { puts "Failed - user2 can not send input--quit" exit }
+}
+
+##### stop client #####
+send -i $ps1_id "q\r"
+expect {
+        -i $ps1_id "Client is stopped\n" { }
+        timeout { puts "Failed - user1 can not stop client" exit }
+}
+send_user "\nuser1 exit!!"
+send -i $ps2_id "q\r"
+expect {
+        -i $ps2_id "Client is stopped\n" { }
+        timeout { puts "Failed - user2 can not stop client" exit }
+}
+send_user "\nuser2 exit!!"
+
+##### stop router #####
+send -i $ps0_id "y\r"
+expect {
+        -i $ps0_id "Closed database successfully" { }
+        timeout { puts "Failed - stopRouter failed" exit }
+}
+send_user "\nrouter is closed!!"
+
+send_user "\n=============== finished test ===============\n"
+exit
+expect eof
